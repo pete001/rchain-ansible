@@ -1,0 +1,13 @@
+---
+
+- name: Restart rchain
+  shell: nohup /opt/testnet/{{ testnet }}/start.sh {{ flags }}
+  become: yes
+  become_user: rchain
+  listen: "restart rchain"
+
+- name: Cleanup the rchain data directory
+  file:
+    path: /opt/testnet/{{ testnet }}/rchain/
+    state: absent
+  listen: "clean rchain"

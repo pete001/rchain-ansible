@@ -1,0 +1,7 @@
+---
+
+hostname: "rchain-node-1"
+type: node
+public_key: "8f1fedb695f18cca520aac379ca489ea546079581eb5efe73e0064f475f23147"
+private_key: "6830a02db0b99845387f01830c73cc25c58980ce0bba7d10eae568eaa12f2718"
+bootstrap: "rnode://1caa8930165e0a6f081ebc51b97ccbd91564bfd7@52.119.8.10:40400"

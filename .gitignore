@@ -1,0 +1,5 @@
+*.retry
+.env
+.idea/
+.DS_STORE
+.kitchen/

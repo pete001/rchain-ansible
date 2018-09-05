@@ -1,0 +1,7 @@
+---
+
+ansible_user: root
+testnet: playground
+deb_url: https://repo.pyr8.io/rchain/downloads/release-rnode-v0.6/rnode_0.6.3_all.deb
+version: 0.6.3
+ops_user: rchain

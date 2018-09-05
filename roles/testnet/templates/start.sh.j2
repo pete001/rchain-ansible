@@ -1,0 +1,11 @@
+#!/bin/bash
+################################################################################
+#
+# Start up rnode
+#
+################################################################################
+
+RNODE=/usr/bin/rnode
+DATADIR=/opt/testnet/{{ testnet }}
+$DATADIR/stop.sh
+$RNODE --config-file $DATADIR/rnode.toml run "$@" >> $DATADIR/stdout.txt 2>> $DATADIR/stderr.txt & echo $! > $DATADIR/rnode.pid

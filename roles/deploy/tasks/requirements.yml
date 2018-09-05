@@ -1,0 +1,48 @@
+---
+
+- name: Install minimum requirements
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: installed
+    update_cache: yes
+  with_items:
+    - git
+    - build-essential
+    - python-simplejson
+    - python-pexpect
+    - supervisor
+    - openjdk-8-jre
+
+- name: Install haveged
+  apt:
+    name: haveged
+    state: present
+
+- name: Start haveged as service and enable to start on boot
+  service:
+    name: haveged
+    state: started
+    enabled: yes
+
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Disable timedatectl
+  shell: timedatectl set-ntp no
+  tags:
+    - time
+
+- name: Make sure ntp is installed
+  apt: name=ntp state=installed
+  tags:
+    - time
+
+- name: Add user
+  user:
+    name: "{{ ops_user }}"
+    shell: /bin/bash
+    groups: sudo
+    state: present
+    home: "/home/{{ ops_user }}"

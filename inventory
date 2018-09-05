@@ -1,0 +1,12 @@
+##########################################################
+# Rchain Digital Ocean testnet
+##########################################################
+
+[rchain-node-1]
+46.101.233.15
+
+[rchain-node:children]
+rchain-node-1
+
+[rchain-nodes:children]
+rchain-node

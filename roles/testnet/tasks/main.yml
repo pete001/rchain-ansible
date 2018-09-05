@@ -1,0 +1,70 @@
+---
+
+- fail: msg="{{ item }} must be defined for this playbook"
+  when: item not in vars
+  with_items:
+    - testnet
+    - type
+
+- name: Check rnode
+  stat: path=/usr/bin/rnode
+  register: rnode
+
+- fail: msg="This host is missing the Rchain binaries"
+  when: rnode.stat.exists == False
+
+- name: Create testnet directories
+  file: path=/opt/testnet/{{ testnet }}/{{ item }} state=directory
+  with_items:
+    - rchain
+    - contracts
+
+- name: Copy bash helpers
+  template:
+    src: "{{ item }}.j2"
+    dest: "/opt/testnet/{{ testnet }}/{{ item }}"
+    owner: "{{ ops_user }}"
+    mode: 0755
+  with_items:
+    - start.sh
+    - stop.sh
+
+- name: Copy static files
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/testnet/{{ testnet }}/"
+    owner: "{{ ops_user }}"
+  with_fileglob:
+    - "scripts/{{ testnet }}/{{ type }}/*"
+
+- name: Copy smart contracts
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/testnet/{{ testnet }}/contracts/"
+    owner: "{{ ops_user }}"
+  with_fileglob:
+    - "scripts/contracts/*"
+
+- name: Copy config file
+  template: src={{ testnet }}/{{ type }}.toml.j2 dest=/opt/testnet/{{ testnet }}/rnode.toml
+  tags:
+    - config
+
+- name: Set permissions
+  file: dest=/opt/testnet/{{ testnet }} owner={{ ops_user }} group={{ ops_user }} recurse=yes
+  tags:
+    - user
+    - config
+
+- name: Define flags
+  set_fact:
+    flags: "--genesis-validator --deploy-timestamp {{ deploy_timestamp }} --required-sigs {{ required_sigs }}"
+  when: mode is defined and mode == "genesis"
+
+- name: Restart the rchain process
+  command: echo "restarting rchain"
+  notify: "restart rchain"
+
+- name: Clear the rchain data directory
+  command: echo "clearing rchain"
+  notify: "clean rchain"

@@ -1,0 +1,29 @@
+#!/bin/bash
+################################################################################
+#
+# Clean stop of rnode
+#
+################################################################################
+
+DIR=/opt/testnet/{{ testnet }}
+
+if [ -f $DIR"/rnode.pid" ]; then
+    pid=$(cat $DIR"/rnode.pid")
+    echo $pid
+    kill $pid
+
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
+
+    rm -r $DIR"/rnode.pid"
+
+    echo -ne "Stopping Rnode"
+
+    while true; do
+        [ ! -d "/proc/$pid/fd" ] && break
+        echo -ne "."
+        sleep 1
+    done
+    echo -ne "\nRnode stopped. \n"
+fi

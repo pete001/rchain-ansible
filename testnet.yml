@@ -1,0 +1,7 @@
+---
+
+- hosts: "{{ host }}"
+  become: yes
+  roles:
+    - management
+    - testnet

@@ -1,0 +1,21 @@
+---
+
+- import_tasks: requirements.yml
+
+- name: Fail if the rnode process is running
+  shell: ps -ef | grep rnode | grep -v grep
+  register: process_list
+  failed_when: process_list.rc == 0
+
+- name: Download the latest package
+  get_url:
+     url: "{{ deb_url }}"
+     dest: "/tmp/{{ version }}.deb"
+
+- name: Install the latest package
+  apt:
+    deb: "/tmp/{{ version }}.deb"
+    dpkg_options: "skip-same-version"
+  register: dpkg_result
+  notify: "clean rchain"
+  changed_when: dpkg_result.changed == 1

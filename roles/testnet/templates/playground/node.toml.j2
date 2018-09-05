@@ -1,0 +1,29 @@
+[server]
+host = "{{ ansible_eth0.ipv4.address }}"
+#port = 40402
+#http-port = 12
+metrics-port = 40403
+no-upnp = false
+default-timeout = 6000
+bootstrap = "{{ bootstrap }}"
+standalone = false
+data-dir = "/opt/testnet/{{ testnet }}/rchain"
+#map-size = 200000000
+
+[grpc-server]
+host = "grpc"
+port = 40401
+#port-internal = 13
+
+[tls]
+#certificate = "/tls/certificate.pem"
+#key = "/tls/key.pem"
+
+[validators]
+#count = 5
+bonds-file = "/opt/testnet/{{ testnet }}/bonds.txt"
+#known = "v1"
+#public-key = "{{ public_key }}"
+private-key = "{{ private_key }}"
+#sig-algorithm = "ed25519"
+wallets-file = "/opt/testnet/{{ testnet }}/wallets.txt"
